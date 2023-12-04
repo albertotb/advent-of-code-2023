@@ -9,12 +9,12 @@ for row, line in enumerate(open(path / "day4.txt")):
     game, numbers = line.split(":")
     winning, numbers = numbers.split("|")
 
-    matches = [n in set(winning.split()) for n in numbers.split()]
-    points = 2 ** (sum(matches) - 1) if any(matches) else 0
+    matches = set(winning.split()) & set(numbers.split())
+    points = 2 ** (len(matches) - 1) if any(matches) else 0
     total += points
 
     # For part 2 we save all the copies
-    cards.append(list(range(row + 1, row + 1 + sum(matches))))
+    cards.append(list(range(row + 1, row + 1 + len(matches))))
 
 print(total)
 
