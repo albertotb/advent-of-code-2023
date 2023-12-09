@@ -1,3 +1,4 @@
+import math
 from itertools import cycle
 from pathlib import Path
 
@@ -17,10 +18,16 @@ with open(path / "day8.txt") as fp:
 df = pd.DataFrame(network.values(), index=network.keys())
 
 node = df.index[df.index.str.endswith("A")]
+z_iters = pd.Series([0] * len(node), dtype="int")
 
 for n, i in enumerate(cycle(inst)):
-    assert node.shape[0] == df.loc[node, i].shape[0]
+    assert len(node) == len(df.loc[node, i])
     node = df.loc[node, i]
-    if node.str.endswith("Z").all():
+    if node.str.endswith("Z").any():
+        z_iters[node.str.endswith("Z").reset_index(drop=True)] = n
+
+    if (z_iters > 0).all():
         break
-print(n + 1)
+
+print(z_iters)
+print(math.lcm(*(z_iters + 1)))
